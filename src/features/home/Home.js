@@ -1,7 +1,16 @@
 import React from "react";
 import classes from "./Home.module.css";
+import { useDispatch } from 'react-redux';
+import { authActions } from "./authSlice";
+
 
 const Home = () => {
+  const dispatch = useDispatch();
+
+  const loginHandler = () => {
+    dispatch(authActions.login());
+  };
+
   return (
     <>
       <section className={classes.home}>
@@ -11,7 +20,7 @@ const Home = () => {
           <input type="text" id="Username" name="Username" />
           <label htmlFor="Password">Password:</label>
           <input type="text" id="Password" name="Password" />
-          <button type="button">LOGIN</button>
+          <button type="button" onClick={loginHandler}>LOGIN</button>
         </form>
       </section>
     </>
