@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { addNewProfile } from "./profilesSlice";
 import { selectAllSkills } from "../skills/skillsSlice";
 
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const AddProfileForm = () => {
   const dispatch = useDispatch();
@@ -12,19 +14,19 @@ const AddProfileForm = () => {
   const [image, setImage] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [location, setLocation] = useState("");
-  const [skillName, setSkillName] = useState("");
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const skills = useSelector(selectAllSkills);
+  const profileSkillsRef = useRef();
+  const [skName, setSkName] = useState([]);
 
   const onNameChanged = (e) => setName(e.target.value);
   const onImageChanged = (e) => setImage(e.target.value);
   const onDateofBirthChanged = (e) => setDateOfBirth(e.target.value);
   const onLocationChanged = (e) => setLocation(e.target.value);
-  const onSkillsChanged = (e) => setSkillName(e.target.value);
 
   const canSave =
-    [name, image, dateOfBirth, location, skillName].every(Boolean) &&
+    [name, image, dateOfBirth, location, profileSkillsRef].every(Boolean) &&
     addRequestStatus === "idle";
 
   const onSaveProfileClicked = () => {
@@ -32,13 +34,19 @@ const AddProfileForm = () => {
       try {
         setAddRequestStatus("pending");
         dispatch(
-          addNewProfile({ name, image, dateOfBirth, location, skills: skillName })
+          addNewProfile({
+            name,
+            image,
+            dateOfBirth,
+            location,
+            skills: profileSkillsRef.current.value,
+          })
         ).unwrap();
         setName("");
         setImage("");
         setLocation("");
         setDateOfBirth("");
-        setSkillName("");
+        setSkName([]);
       } catch (err) {
         console.error("Failed to save the profile", err);
       } finally {
@@ -48,12 +56,18 @@ const AddProfileForm = () => {
   };
 
 
-  const skillsOptions = skills.map((skill) => (
-    <option key={skill.id} value={skill.name}>
-      {skill.name}
-    </option>
-  ));
+  var skillsNames = [];
+  for (var i = 0; i < skills.length; i++) {
+    skillsNames.push(skills[i].name);
+  }
+  console.log(skillsNames);
 
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setSkName(typeof value === "string" ? value.split(",") : value);
+  };
 
   return (
     <section>
@@ -91,16 +105,27 @@ const AddProfileForm = () => {
           value={location}
           onChange={onLocationChanged}
         />
-        <label htmlFor="profileSkill"> Skill:</label>
-        <select
-            id="profileSkill"
-            name="profileSkill"
-            value={skillName}
-            onChange={onSkillsChanged}
+        <label htmlFor="profileSkill"> Skills:</label>
+        <Select
+          labelId="demo-multiple-name-label"
+          id="demo-multiple-name"
+          multiple
+          value={skName}
+          onChange={handleChange}
+          inputRef={profileSkillsRef}
+          style ={{
+            backgroundColor: "white",
+            borderColor: "black",
+            marginBottom: 20,
+          }} 
         >
-          <option value=""></option>
-          {skillsOptions}
-        </select>
+          {skillsNames.map((name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+
         <button
           type="button"
           onClick={onSaveProfileClicked}
