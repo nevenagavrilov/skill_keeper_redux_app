@@ -6,15 +6,16 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
 import { deleteProfile } from "./profilesSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { cartActions } from "../../components/cartSlice";
 
-const Profile = ({profile}) => {
+const Profile = ({ profile }) => {
   const dispatch = useDispatch();
 
   return (
@@ -41,7 +42,7 @@ const Profile = ({profile}) => {
                 {profile.location}
               </Typography>
               <Typography gutterBottom component="div">
-              {profile.skills}
+                {profile.skills}
               </Typography>
             </React.Fragment>
           </ListItemText>
@@ -56,17 +57,28 @@ const Profile = ({profile}) => {
           >
             <DeleteIcon />
           </IconButton>
-          <IconButton
-            aria-label="edit"
-            size="small"
-          ><Link to={`/profiles/${profile.id}`}>
-            <EditTwoToneIcon />
+          <IconButton aria-label="edit" size="small">
+            <Link to={`/profiles/${profile.id}`}>
+              <EditTwoToneIcon />
             </Link>
           </IconButton>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              dispatch(
+                cartActions.addProfileToCart({
+                  profileId: profile.id,
+                  profileName: profile.name,
+                })
+              );
+            }}
+          >
+            Add to Cart
+          </Button>
         </ListItem>
       </List>
     </Card>
   );
 };
 
-export default Profile
+export default Profile;

@@ -6,6 +6,7 @@ import Skills from "./features/skills/Skills";
 import Profiles from "./features/profiles/Profiles";
 import EditSkillForm from "./features/skills/EditSkillForm";
 import EditProfileForm from "./features/profiles/EditProfileForm";
+import Cart from "./components/Cart";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
 
         <Route path="/skills" element={<Skills />}/>     
         <Route path="/skills/:skillId" element={<EditSkillForm/>} />
+
+        <Route path="/cart" element={<Cart />}/>     
         
       </Routes>
     </>

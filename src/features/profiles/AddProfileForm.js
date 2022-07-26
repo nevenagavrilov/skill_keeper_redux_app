@@ -55,12 +55,10 @@ const AddProfileForm = () => {
     }
   };
 
-
   var skillsNames = [];
   for (var i = 0; i < skills.length; i++) {
     skillsNames.push(skills[i].name);
   }
-  console.log(skillsNames);
 
   const handleChange = (event) => {
     const {
