@@ -8,7 +8,7 @@ const cartSlice = createSlice({
   reducers: {
     addProfileToCart(state, action) {
       const newProfile =  action.payload;
-      const existingProfile = state.profilesInCart.find(profile => profile.id === newProfile.id);
+      const existingProfile = state.profilesInCart.find(profile => profile.id === newProfile.profileId);
       if (!existingProfile){
         state.profilesInCart.push(newProfile);
       } 
